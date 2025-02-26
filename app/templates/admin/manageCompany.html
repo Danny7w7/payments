@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% load static %}
 {% block head %}
-    <title>Creation User</title>
+    <title>Creation Companies</title>
 	<!--plugins-->
 	<link href="{% static "assets/plugins/simplebar/css/simplebar.css" %}" rel="stylesheet" />
 	<link href="{% static "assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" %}" rel="stylesheet" />
@@ -22,43 +22,33 @@
 	<link rel="stylesheet" href="{% static "assets/css/header-colors.css" %}" />
 {% endblock %}
 {% block page_content %}
-<h6 class="mb-0 text-uppercase">Manage users</h6>
+<h6 class="mb-0 text-uppercase">Manage Companies</h6>
 <hr/>
 <div class="row">
 	<div class="col-xl-10 mx-auto">
 		<div class="card">
 			<div class="card-header px-4 py-3">
-				<h5 class="mb-0">Create user</h5>
+				<h5 class="mb-0">Create Company</h5>
 			</div>
 			<div class="card-body p-4">
-				<form id='formUser' class="row g-3 needs-validation" method="POST" >
+				<form id='formCompany' class="row g-3 needs-validation" method="POST" >
 					<div class="col-md-4">
-						<label for="first_name" class="form-label">First Name</label>
-						<input type="text" class="form-control" id="first_name" name="first_name"required>
+						<label for="name" class="form-label">Company Name</label>
+						<input type="text" class="form-control" id="name" name="name" required>
 					</div>
 					<div class="col-md-4">
-						<label for="last_name" class="form-label">Last Name</label>
-						<input type="text" class="form-control" id="last_name" name="last_name" required>
-					</div>
-					<div class="col-md-4">
-						<label for="email" class="form-label">Email</label>
-						<input type="email" class="form-control" id="email" name="email" required>
-					</div>
-					<div class="col-md-4">
-						<label for="username" class="form-label">Username</label>
-						<input type="text" class="form-control" id="username" name="username" required>
-					</div>
-					<div class="col-md-4">
-						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password" name="password1" required>
-					</div>
-					<div class="col-md-4">
-						<label for="password2" class="form-label">Confirm password</label>
-						<input type="password" class="form-control" id="password2" name="password2" required>
+						<label for="user" class="form-label">Company Owner</label>
+                        <select class="form-select" name="user" id="user" required>
+                            <option selected>Select one</option>
+                            {% for user in users %}
+                            <option value="{{user.id}}">{{user}}</option>
+                            {% endfor %}
+                        </select>
+                        
 					</div>
 					<div class="col-md-12">
 						<div class="d-md-flex d-grid align-items-center gap-3">
-							<button type="button" onclick="sendDataCient()" class="btn btn-primary px-4">Submit</button>
+							<button type="button" onclick="sendDataCompany()" class="btn btn-primary px-4">Submit</button>
 						</div>
 					</div>
 					{% csrf_token %}
@@ -73,19 +63,19 @@
 					<table id="tableUser" class="table table-striped table-bordered">
 						<thead>
 							<tr>
-								<th>Name User</th>
-								<th>Username</th>
-								<th>Role</th>
+								<th>Company Name</th>
+								<th>Company Owner</th>
+								<th>Balance</th>
 								<th>Active</th>
 								<th>Option</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for user in users %}
+							{% for company in companies %}
 							<tr>
-								<td>{{user.first_name}} {{user.last_name}}</td>
-								<td>{{user.username}}</td>
-								<td>{{user.role}}</td>
+								<td>{{company.name}}</td>
+								<td>{{company.user.first_name}} {{company.user.last_name}}</td>
+								<td>{{company.formatBalance}}</td>
 								<td>
 									<label class="switch">
 										<input id='{{user.id}}' type="checkbox" {% if user.is_active %}checked{% endif %}>
@@ -109,7 +99,6 @@
 		</div>
 	</div>
 </div>
-<strong></strong>
 {% endblock %}
 {% block end_js %}
 	<!-- Bootstrap JS -->
@@ -126,5 +115,5 @@
 	<!--app JS-->
 	<script src="{% static 'assets/js/app.js' %}"></script>
 
-	<script src="{% static 'validations/createUserValidations.js' %}"></script>	
+	<script src="{% static 'validations/createCompanyValidations.js' %}"></script>	
 {% endblock %}

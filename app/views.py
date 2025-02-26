@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -18,6 +19,18 @@ def manageUser(request):
         'users':users
     }
     return render(request, 'admin/manageUser.html', context)
+
+def manageCompany(request):
+    companies = Companies.objects.all().select_related('user')
+    users_without_companies = Users.objects.filter(~Q(companies__isnull=False))
+    
+    form = CompanyForm()
+    context = {
+        'companies':companies,
+        'users':users_without_companies,
+        'form':form
+    }
+    return render(request, 'admin/manageCompany.html', context)
 
 def dashboard(request):
     
@@ -44,7 +57,6 @@ def login_(request):
 #Fetch
 def createUser(request):
     form = UserForm(request.POST)
-    print(form.errors)
     if form.is_valid():
         client = form.save(commit=False)
         client.is_active = True
@@ -63,3 +75,14 @@ def toggleUserStatus(request, user_id):
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'success': False, 'errors':e}, status=400)
+
+def createCompany(request):
+    form = CompanyForm(request.POST)
+    if form.is_valid():
+        company = form.save(commit=False)
+        company.balance = 10
+        company.save()
+        return JsonResponse({'success': True, 'message': 'Compañia creado correctamente'})
+    else:
+        # Si el formulario no es válido, devolvemos los errores en formato JSON
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)

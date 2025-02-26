@@ -25,9 +25,14 @@ urlpatterns = [
 
     path('', views.index, name='index'),
     path('manageUser/', views.manageUser, name='manageUser'),
+    path('manageCompany/', views.manageCompany, name='manageCompany'),
     path('dashboard/', views.dashboard, name='dashboard'),
 
-    #Fetch
+    #-------------Fetch-------------
+    #ManageUsers
     path('fetchCreateUser/', views.createUser, name='fetchCreateUser'),
     path('toggleUserStatus/<int:user_id>/', views.toggleUserStatus, name='toggleUserStatus'),
+
+    #ManageCompany
+    path('fetchCreateCompany/', views.createCompany, name='fetchCreateCompany'),
 ]

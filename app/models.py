@@ -3,18 +3,25 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class Companies(models.Model):
-    name = models.CharField(max_length=50)
-    balance = models.DecimalField(max_digits=20, decimal_places=6)
-
-    def __str__(self):
-        return self.name
-
 class Users(AbstractUser):
-    company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True, blank=True)
+    first_name = models.CharField(max_length=30, blank=False)
+    last_name = models.CharField(max_length=30, blank=False)
+    email = models.EmailField(max_length=254, unique=True, blank=False)
 
     def __str__(self):
         return self.username
+    
+class Companies(models.Model):
+    name = models.CharField(max_length=50)
+    balance = models.DecimalField(max_digits=20, decimal_places=6)
+    user = models.OneToOneField(Users, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+    def formatBalance(self):
+        return "{:.2f}".format(self.balance)
+
 
 class Services(models.Model):
     name = models.CharField(max_length=100)
